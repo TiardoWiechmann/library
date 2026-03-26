@@ -22,8 +22,9 @@ function addBookToLibrary(title, author, pages, read) {
     myLibrary.push(book);
 }
 
+
 function displayAllBooks() {
-    const container = document.createElement("div");
+    const container = document.querySelector(".container");
     const table = createTable(myLibrary[0]);
     myLibrary.forEach(function (book){
         const row = appendRow(table, book);
@@ -32,8 +33,9 @@ function displayAllBooks() {
 
     container.appendChild(table);
     const body = document.querySelector("body");
-    body.prepend(container);
+    body.appendChild(container);
 }
+
 
 function createTable(book) {
     const table = document.createElement("table");
@@ -44,9 +46,8 @@ function createTable(book) {
             continue;
         }
         const th = document.createElement("th");
-        th.textContent = prop;
+        th.textContent = strToTitle(prop);
         table.appendChild(th);
-        console.log(typeof book[prop]);
     }
     return table;
 }
@@ -63,6 +64,31 @@ function appendRow(table, book) {
     }
     return row;
 }
+
+
+function strToTitle(word) {
+    return word.charAt(0).toUpperCase() + word.slice(1);
+}
+
+
+
+// When button is clicked, the user should be able to insert book infos
+const newBook = document.querySelector(".outer");
+const dialog = document.querySelector("dialog");
+
+newBook.addEventListener("click", () => {
+    dialog.showModal();
+})
+
+
+// When submit-button is clicked, get all 4 input nodes
+// Assign content
+// Use addBookToLibrary
+
+const submit = document.querySelector(".inner");
+
+
+
 
 
 
