@@ -86,11 +86,7 @@ newBook.addEventListener("click", () => {
 })
 
 
-// When submit-button is clicked, get all 4 input nodes
-// Assign content
-// Use addBookToLibrary
-const submit = document.querySelector(".inner");
-submit.addEventListener("click", (e) => {
+function updateTable(e) {
     e.preventDefault();
     const container = document.querySelector(".container");
     const table = document.querySelector("table");
@@ -106,7 +102,11 @@ submit.addEventListener("click", (e) => {
     dialog.close();
     displayBooks();
     clearInputs();
-})
+}
+
+
+const submit = document.querySelector(".inner");
+submit.addEventListener("click", updateTable);
 
 
 
