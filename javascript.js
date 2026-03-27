@@ -7,7 +7,6 @@ function Book(id, title, author, pages, read) {
     this.author = author;
     this.pages = pages;
     this.read = read;
-
     this.info = function() {
         const r = this.read ? "read it" : "not read it yet";
         console.log(`${this.title} by ${this.author}, ${this.pages} pages, ${r}`);
@@ -59,17 +58,22 @@ function appendRow(book) {
         row.appendChild(cell);
     }
     row.setAttribute("book_id", book.id);
-    return addButtonToRow(row, book.id);
+    const newRow = addButtonToRow(row, book.id, "d");
+    return addButtonToRow(row, book.id, "r");
 }
 
 
-function addButtonToRow(row, book_id) {
-    const btn = document.createElement("button");
-    btn.textContent = "Delete";
-    btn.id = book_id;
-    const td = document.createElement("td");
-    td.appendChild(btn);
-    row.appendChild(td);
+function addButtonToRow(row, book_id, mode) {
+    const btn = document.createElement("td");
+    if(mode === "d"){
+        btn.textContent = "Delete";
+        btn.setAttribute("data-book_b_id", book_id); 
+    }
+    else {
+        btn.textContent = "Toggle read";
+        btn.setAttribute("data-book_r_id", book_id); 
+    }
+    row.appendChild(btn);
     return row;
 }
 
@@ -108,11 +112,11 @@ function updateTable(e, inserted) {
 }
 
 
-// Table must be update after deletion of a row
-function updateLibrary(book_id) {
+// Table must be updated after deletion of a row
+function updateLibrary(book_b_id) {
     let delBook;
     myLibrary.forEach((book) => {
-        if (book.id == book_id){
+        if (book.id == book_b_id){
             delBook = book;
         }
     });
@@ -138,10 +142,20 @@ submit.addEventListener("click", (e) => updateTable(e, inserted));
 // When delete button is clicked, associated row must be deleted
 const container = document.querySelector(".container");
 container.addEventListener("click", (e) => {
-    let book_id = e.target.id;
-    const row = document.querySelector(`tr[book_id='${book_id}']`);
-    const table = document.querySelector("table");
-    updateLibrary(book_id);
-    const inserted = false;
-    updateTable(e, inserted)
+    let book_id = e.target.dataset.book_b_id;
+    // console.log(e.target, book_id);
+    if(book_id !== undefined){
+        updateLibrary(book_id);
+        const inserted = false;
+        updateTable(e, inserted)
+    }
 })
+
+
+
+
+
+
+// Add a button on each book's display to change its read status
+// 1. Add read button to each row
+// 2. Create toggle function for book prototype that toggles the status
