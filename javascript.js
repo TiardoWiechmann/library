@@ -57,20 +57,21 @@ function appendRow(book) {
         cell.textContent = book[prop];
         row.appendChild(cell);
     }
-    row.setAttribute("index", index);
+    row.setAttribute("book_id", book.id);
     return addButtonToRow(row, book.id);
 }
 
-function addButtonToRow(row) {
+
+function addButtonToRow(row, book_id) {
     const btn = document.createElement("button");
     btn.textContent = "Delete";
-    btn.id = index;
-    index += 1;
+    btn.id = book_id;
     const td = document.createElement("td");
     td.appendChild(btn);
     row.appendChild(td);
     return row;
 }
+
 
 function strToTitle(word) {
     return word.charAt(0).toUpperCase() + word.slice(1);
@@ -93,6 +94,7 @@ function updateTable(e) {
         container.removeChild(table);
     }
 
+    
     const title = document.getElementById("title").value;
     const author = document.getElementById("author").value;
     const pages = document.getElementById("pages").value;
@@ -104,10 +106,20 @@ function updateTable(e) {
 }
 
 
+// Table must be update after deletion of a row
+function updateLibrary(book_id) {
+    let delBook;
+    myLibrary.forEach((book) => {
+        if (book.id == book_id){
+            delBook = book;
+        }
+    });
+    const i = myLibrary.indexOf(delBook);
+    myLibrary.splice(i, i+1);
+}
 
 
 const myLibrary = [];
-let index = 0;
 
 // When button is clicked, the user should be able to insert book infos
 const newBook = document.querySelector(".outer");
@@ -123,9 +135,8 @@ submit.addEventListener("click", updateTable);
 // When delete button is clicked, associated row must be deleted
 const container = document.querySelector(".container");
 container.addEventListener("click", (e) => {
-    let bookIndex = e.target.id;
-    const row = document.querySelector(`tr[index='${bookIndex}']`);
+    let book_id = e.target.id;
+    const row = document.querySelector(`tr[book_id='${book_id}']`);
     const table = document.querySelector("table");
-    table.removeChild(row);
-    myLibrary.splice(bookIndex, bookIndex + 1)
+    updateLibrary(book_id);
 })
