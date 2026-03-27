@@ -14,6 +14,7 @@ function Book(id, title, author, pages, read) {
     }
 }
 
+
 function addBookToLibrary(title, author, pages, read) {
     const id = crypto.randomUUID();
     const book = new Book(id, title, author, pages, read);
@@ -29,7 +30,6 @@ function displayBooks() {
         const row = appendRow(book);
         table.appendChild(row);
     });
-
     container.appendChild(table);
 }
 
@@ -46,6 +46,7 @@ function createTable(properties) {
     table.appendChild(row);
     return table;
 }
+
 
 function appendRow(book) {
     const row = document.createElement("tr");
@@ -86,7 +87,7 @@ function clearInputs() {
 };
 
 
-function updateTable(e) {
+function updateTable(e, inserted) {
     e.preventDefault();
     const container = document.querySelector(".container");
     const table = document.querySelector("table");
@@ -94,13 +95,14 @@ function updateTable(e) {
         container.removeChild(table);
     }
 
-    
-    const title = document.getElementById("title").value;
-    const author = document.getElementById("author").value;
-    const pages = document.getElementById("pages").value;
-    const read = document.getElementById("read").value;
-    addBookToLibrary(title, author, pages, read);
-    dialog.close();
+    if(inserted){
+        const title = document.getElementById("title").value;
+        const author = document.getElementById("author").value;
+        const pages = document.getElementById("pages").value;
+        const read = document.getElementById("read").value;
+        addBookToLibrary(title, author, pages, read);
+        dialog.close();
+    }
     displayBooks();
     clearInputs();
 }
@@ -115,7 +117,7 @@ function updateLibrary(book_id) {
         }
     });
     const i = myLibrary.indexOf(delBook);
-    myLibrary.splice(i, i+1);
+    myLibrary.splice(i, 1);
 }
 
 
@@ -130,7 +132,8 @@ newBook.addEventListener("click", () => {
 
 // Add book details by pressing submit button
 const submit = document.querySelector(".inner");
-submit.addEventListener("click", updateTable);
+const inserted = true;
+submit.addEventListener("click", (e) => updateTable(e, inserted));
 
 // When delete button is clicked, associated row must be deleted
 const container = document.querySelector(".container");
@@ -139,4 +142,6 @@ container.addEventListener("click", (e) => {
     const row = document.querySelector(`tr[book_id='${book_id}']`);
     const table = document.querySelector("table");
     updateLibrary(book_id);
+    const inserted = false;
+    updateTable(e, inserted)
 })
