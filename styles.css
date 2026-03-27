@@ -53,6 +53,7 @@ text-align: left;
 .outer:hover {
     scale: 1.1;
     background-color: blue;
+    cursor: pointer;
 }
 
 dialog:modal {
@@ -96,10 +97,10 @@ input {
 }
 
 
-
+table,
 td[data-book_b_id],
 td[data-book_r_id]{
-    border: 2px solid blue;
+    border: 3px solid blue;
 }
 
 td[data-book_b_id]{
@@ -108,4 +109,9 @@ td[data-book_b_id]{
 
 td[data-book_r_id] {
     background-color: rgb(152, 57, 240,0.5);
+}
+
+td[data-book_b_id]:hover,
+td[data-book_r_id]:hover {
+    cursor: pointer;
 }

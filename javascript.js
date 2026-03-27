@@ -106,9 +106,9 @@ function updateTable(e, inserted) {
         const read = document.getElementById("read").value;
         addBookToLibrary(title, author, pages, read);
         dialog.close();
+        clearInputs();
     }
     displayBooks();
-    clearInputs();
 }
 
 
@@ -123,6 +123,16 @@ function updateLibrary(book_b_id) {
     const i = myLibrary.indexOf(delBook);
     myLibrary.splice(i, 1);
 }
+
+
+Book.prototype.toggleRead = function () {
+    if (this.read.toLowerCase() === "no") {
+        this.read = "yes";
+    }
+    else {
+        this.read = "no";
+    }
+};
 
 
 const myLibrary = [];
@@ -142,20 +152,21 @@ submit.addEventListener("click", (e) => updateTable(e, inserted));
 // When delete button is clicked, associated row must be deleted
 const container = document.querySelector(".container");
 container.addEventListener("click", (e) => {
+    // Delete Book
     let book_id = e.target.dataset.book_b_id;
-    // console.log(e.target, book_id);
     if(book_id !== undefined){
         updateLibrary(book_id);
-        const inserted = false;
-        updateTable(e, inserted)
     }
+    // Toggle read
+    book_id = e.target.dataset.book_r_id;
+    console.log(e.target, book_id);
+    if(book_id !== undefined) {
+        myLibrary.forEach((book) => {
+            if (book.id === book_id) {
+                book.toggleRead();
+            }
+        })
+    }
+    const inserted = false;
+    updateTable(e, inserted);
 })
-
-
-
-
-
-
-// Add a button on each book's display to change its read status
-// 1. Add read button to each row
-// 2. Create toggle function for book prototype that toggles the status
