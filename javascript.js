@@ -1,5 +1,3 @@
-const myLibrary = [];
-
 function Book(id, title, author, pages, read) {
     if (!new.target) {
         throw Error("You must use the 'new' operator to call the constructor");
@@ -59,9 +57,20 @@ function appendRow(book) {
         cell.textContent = book[prop];
         row.appendChild(cell);
     }
-    return row;
+    row.setAttribute("index", index);
+    return addButtonToRow(row, book.id);
 }
 
+function addButtonToRow(row) {
+    const btn = document.createElement("button");
+    btn.textContent = "Delete";
+    btn.id = index;
+    index += 1;
+    const td = document.createElement("td");
+    td.appendChild(btn);
+    row.appendChild(td);
+    return row;
+}
 
 function strToTitle(word) {
     return word.charAt(0).toUpperCase() + word.slice(1);
@@ -74,16 +83,6 @@ function clearInputs() {
         input.value = "";
     })
 };
-
-
-
-// When button is clicked, the user should be able to insert book infos
-const newBook = document.querySelector(".outer");
-const dialog = document.querySelector("dialog");
-
-newBook.addEventListener("click", () => {
-    dialog.showModal();
-})
 
 
 function updateTable(e) {
@@ -105,8 +104,28 @@ function updateTable(e) {
 }
 
 
+
+
+const myLibrary = [];
+let index = 0;
+
+// When button is clicked, the user should be able to insert book infos
+const newBook = document.querySelector(".outer");
+const dialog = document.querySelector("dialog");
+newBook.addEventListener("click", () => {
+    dialog.showModal();
+})
+
+// Add book details by pressing submit button
 const submit = document.querySelector(".inner");
 submit.addEventListener("click", updateTable);
 
-
-
+// When delete button is clicked, associated row must be deleted
+const container = document.querySelector(".container");
+container.addEventListener("click", (e) => {
+    let bookIndex = e.target.id;
+    const row = document.querySelector(`tr[index='${bookIndex}']`);
+    const table = document.querySelector("table");
+    table.removeChild(row);
+    myLibrary.splice(bookIndex, bookIndex + 1)
+})
