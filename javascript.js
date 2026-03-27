@@ -23,36 +23,33 @@ function addBookToLibrary(title, author, pages, read) {
 }
 
 
-function displayAllBooks() {
+function displayBooks() {
     const container = document.querySelector(".container");
-    const table = createTable(myLibrary[0]);
+    const properties = ["id", "title", "author", "pages", "read"];
+    const table = createTable(properties);
     myLibrary.forEach(function (book){
-        const row = appendRow(table, book);
+        const row = appendRow(book);
         table.appendChild(row);
     });
 
     container.appendChild(table);
-    const body = document.querySelector("body");
-    body.appendChild(container);
 }
 
 
-function createTable(book) {
+function createTable(properties) {
     const table = document.createElement("table");
     table.style.margin = "0 auto";
     const row = document.createElement("tr");
-    for (prop in book) {
-        if (typeof book[prop] === "function") {
-            continue;
-        }
+    for (prop of properties) {
         const th = document.createElement("th");
         th.textContent = strToTitle(prop);
-        table.appendChild(th);
+        row.appendChild(th);
     }
+    table.appendChild(row);
     return table;
 }
 
-function appendRow(table, book) {
+function appendRow(book) {
     const row = document.createElement("tr");
     for (prop in book) {
         if (typeof book[prop] === "function") {
@@ -71,6 +68,14 @@ function strToTitle(word) {
 }
 
 
+function clearInputs() {
+    const inputs = document.querySelectorAll("input");
+    inputs.forEach((input) => {
+        input.value = "";
+    })
+};
+
+
 
 // When button is clicked, the user should be able to insert book infos
 const newBook = document.querySelector(".outer");
@@ -84,21 +89,24 @@ newBook.addEventListener("click", () => {
 // When submit-button is clicked, get all 4 input nodes
 // Assign content
 // Use addBookToLibrary
-
 const submit = document.querySelector(".inner");
+submit.addEventListener("click", (e) => {
+    e.preventDefault();
+    const container = document.querySelector(".container");
+    const table = document.querySelector("table");
+    if (table !== null){
+        container.removeChild(table);
+    }
+
+    const title = document.getElementById("title").value;
+    const author = document.getElementById("author").value;
+    const pages = document.getElementById("pages").value;
+    const read = document.getElementById("read").value;
+    addBookToLibrary(title, author, pages, read);
+    dialog.close();
+    displayBooks();
+    clearInputs();
+})
 
 
 
-
-
-
-
-
-
-// const book1 = new Book("Harry Potter", "J.K. Rowling", 500, true);
-// book1.info();
-addBookToLibrary("Harry Potter", "Rowling", 500, false);
-addBookToLibrary("Harry Potter2", "Rowling", 500, true);
-
-console.log(myLibrary);
-displayAllBooks();
